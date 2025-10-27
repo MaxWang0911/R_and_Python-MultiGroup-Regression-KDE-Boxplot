@@ -1,0 +1,68 @@
+---
+title: "R | Multiple-Group Linear Regression with Confidence Intervals and Marginal
+  Distributions (KDE + Boxplots)"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r}
+library(ggplot2)
+library(ggExtra)
+library(dplyr)
+library(broom)
+```
+
+
+# === 1. Load the dataset ===
+```{r}
+
+df <- read.csv("C:/Users/zheng/Downloads/data_three_groups.csv")
+
+```
+
+
+# === 2. Plot 1: Scatter plot with regression + boxplot margins ===
+```{r}
+
+p1 <- ggplot(df, aes(X_value, Y_value, color = Group)) +
+  geom_point(size = 3, alpha = 0.7, stroke = 1.1) +   # scatter points
+  geom_smooth(method = "lm", se = TRUE, linetype = "dashed",
+              linewidth = 1.1, alpha = 0.22) +        # regression line + CI
+  labs(x = "X Value", y = "Y Value", title = "Regression with Boxplot Margins") +
+  theme_bw(base_size = 14) +
+  theme(
+    legend.position = "top",
+    plot.title = element_text(face = "bold", size = 16)
+  )
+
+# Add marginal boxplots (horizontal and vertical)
+p1_box <- ggMarginal(p1, type = "boxplot", groupColour = TRUE, groupFill = TRUE)
+
+# Display the figure
+p1_box
+```
+
+
+# === 3. Plot 2: Scatter plot with regression + density (KDE) margins ===
+```{r}
+
+p2 <- ggplot(df, aes(X_value, Y_value, color = Group)) +
+  geom_point(size = 3, alpha = 0.7, stroke = 1.1) +   # scatter points
+  geom_smooth(method = "lm", se = TRUE, linetype = "dashed",
+              linewidth = 1.1, alpha = 0.22) +        # regression line + CI
+  labs(x = "X Value", y = "Y Value", title = "Regression with Density Margins") +
+  theme_bw(base_size = 14) +
+  theme(
+    legend.position = "top",
+    plot.title = element_text(face = "bold", size = 16)
+  )
+
+# Add marginal density plots
+p2_kde <- ggMarginal(p2, type = "density", groupColour = TRUE, groupFill = TRUE, alpha = 0.30)
+
+# Display the figure
+p2_kde
+```
+
+
